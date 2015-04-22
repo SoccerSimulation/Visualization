@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Soccer Sim</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://autobahn.s3.amazonaws.com/js/autobahn.min.js"></script>
+    {% javascripts '@MatchBundle/Resources/public/js/*' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    {% stylesheets '@MatchBundle/Resources/public/css/*.scss' output='/css/page.css' filter='?yui_css,compass' %}
+    <link href="{{ asset_url }}" rel="stylesheet" />
+    {% endstylesheets %}
+</head>
+<body>
+{% block content %}{% endblock %}
+</body>
+</html>

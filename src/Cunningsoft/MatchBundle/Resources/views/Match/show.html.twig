@@ -1,0 +1,70 @@
+{% extends 'MatchBundle::layout.html.twig' %}
+
+{% block content %}
+<div id="pitch"></div>
+<div id="slider" style="width: 1400px"></div>
+
+<input type="checkbox" id="showPlayerState" />
+<label for="showPlayerState">show player state</label>
+
+<input type="checkbox" id="showSteeringForce" />
+<label for="showSteeringForce">show steering force</label>
+
+<input type="checkbox" id="showTarget" />
+<label for="showTarget">show target</label>
+
+<input type="checkbox" id="showIfThreatened" />
+<label for="showIfThreatened">show if threatened</label>
+
+<input type="checkbox" id="showRegions" />
+<label for="showRegions">show regions</label>
+
+<input type="checkbox" id="showSupportSpots" />
+<label for="showSupportSpots">show support spots</label>
+
+<script>
+    var response, pitch, conn;
+    $(document).ready(function() {
+        response = {};
+        pitch = Raphael(document.getElementById('pitch'), 1400, 800);
+        conn = new ab.Session(
+                'ws://soccersim.playground.cunningsoft.de:8080',
+                function () {
+                    conn.subscribe('livematch', function (topic, data) {
+                        response = data;
+                    });
+                    $('#slider').noUiSlider({
+                        start: {{ fps }},
+                        snap: true,
+                        range: {
+                            'min': 0.2,
+                            '10%': 0.5,
+                            '20%': 1,
+                            '30%': 2,
+                            '40%': 5,
+                            '50%': 10,
+                            '60%': 15,
+                            '70%': 20,
+                            '80%': 25,
+                            '90%': 30,
+                            'max': 40
+                        }
+                    });
+                    $('#slider').on('change', function () {
+                        console.log($(this).val());
+                        conn.publish('adjustSpeed', $(this).val());
+                    });
+                },
+                function () {
+                    console.warn('WebSocket connection closed');
+                },
+                {
+                    'skipSubprotocolCheck': true
+                }
+        );
+        setInterval(function() {
+            render(response);
+        }, 1000 / 30);
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,3 @@
+services:
+    soccerstar.match.server:
+        class: Cunningsoft\MatchBundle\Services\Server

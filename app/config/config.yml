@@ -1,0 +1,34 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+
+framework:
+    translator:      ~
+    secret:          %secret%
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: "%kernel.debug%"
+    form:            true
+    csrf_protection: true
+    validation:      { enable_annotations: true }
+    templating:      { engines: ['twig'] } #assets_version: SomeVersionScheme
+    default_locale: %locale%
+    session: ~
+
+# Twig Configuration
+twig:
+    debug:            %kernel.debug%
+    strict_variables: %kernel.debug%
+
+assetic:
+    debug:          %kernel.debug%
+    use_controller: false
+    bundles: [ "MatchBundle" ]
+    filters:
+        sass: ~
+        compass: ~
+        cssrewrite: ~
+        yui_css:
+             jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.6.jar
+        yui_js:
+             jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.6.jar
