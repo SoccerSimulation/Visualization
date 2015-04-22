@@ -1,10 +1,14 @@
 var clientWidth = 1400;
 var clientHeight = 800;
 var playingAreaBorder = 20;
+var fpsFilterStrength = 20, frameTime = 0, lastLoopDate = new Date(), thisLoopDate;
 function render(data)
 {
+    thisLoopDate = new Date();
+    var thisFrameTime = thisLoopDate - lastLoopDate;
+    frameTime += (thisFrameTime - frameTime) / fpsFilterStrength;
+    lastLoopDate = thisLoopDate;
     pitch.clear();
-    console.log(data);
 
     drawGras();
     drawRegions(data.regions);
@@ -15,6 +19,7 @@ function render(data)
     drawScore(data.goalRed, data.goalBlue);
     drawTeamRed(data.teamRed);
     drawTeamBlue(data.teamBlue);
+    pitch.text(40, 10, (1000/frameTime).toFixed(1) + ' fps').attr('fill', '#fff');
 }
 function drawGras()
 {
@@ -75,7 +80,7 @@ function drawTeamBlue(team)
 function drawTeamInControl(inControl, color)
 {
     if (inControl) {
-        pitch.text(50, 10, color + ' in Control').attr('fill', '#fff');
+        pitch.text(200, 10, color + ' in Control').attr('fill', '#fff');
     }
 }
 function drawControllingPlayer(player)
