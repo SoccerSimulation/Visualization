@@ -39,28 +39,28 @@ function drawRegions(regions)
 }
 function drawBall(ball)
 {
-    pitch.circle(ball.position.x, ball.position.y, 5).attr('fill', '#fff').attr('stroke', '#fff');
+    pitch.circle(ball.position.x, ball.position.y, 2.2).attr('fill', '#fff').attr('stroke', '#fff');
 }
 function drawGoalRed(goalRed)
 {
-    pitch.rect(goalRed.leftPost.x - 40, goalRed.leftPost.y, 40, goalRed.rightPost.y - goalRed.leftPost.y).attr('stroke', '#fff');
+    pitch.rect(goalRed.leftPost.x - 20, goalRed.leftPost.y, 20, goalRed.rightPost.y - goalRed.leftPost.y).attr('stroke', '#fff');
 }
 function drawGoalBlue(goalBlue)
 {
-    pitch.rect(goalBlue.leftPost.x, goalBlue.leftPost.y, 40, goalBlue.rightPost.y - goalBlue.leftPost.y).attr('stroke', '#fff');
+    pitch.rect(goalBlue.leftPost.x, goalBlue.leftPost.y, 20, goalBlue.rightPost.y - goalBlue.leftPost.y).attr('stroke', '#fff');
 }
 function drawPitchMarkings()
 {
     pitch.circle(pitchCenterX, pitchCenterY, 91.5).attr('stroke', '#fff'); // kick off circle
-    pitch.circle(pitchCenterX, pitchCenterY, 2).attr('fill', '#fff').attr('stroke', '#fff'); // kick off spot
+    pitch.circle(pitchCenterX, pitchCenterY, 1).attr('stroke', '#fff'); // kick off spot
     pitch.rect(pitchOffsetWidth, pitchOffsetHeight, pitchWidth, pitchHeight).attr('stroke', '#fff'); // pitch limitations
     pitch.path(['M', pitchCenterX, pitchOffsetHeight, 'L', pitchCenterX, pitchHeight + pitchOffsetHeight]).attr('stroke', '#fff'); // middle line
     pitch.rect(pitchOffsetWidth, pitchCenterY - 201.6, 165, 403.2).attr('stroke', '#fff'); // left penalty area
     pitch.rect(pitchWidth + pitchOffsetWidth - 165, pitchCenterY - 201.6, 165, 403.2).attr('stroke', '#fff'); // right penalty area
     pitch.rect(pitchOffsetWidth, pitchCenterY - 91.6, 55, 183.2).attr('stroke', '#fff'); // left goalkeeper area
     pitch.rect(pitchWidth + pitchOffsetWidth - 55, pitchCenterY - 91.6, 55, 183.2).attr('stroke', '#fff'); // right goalkeeper area
-    pitch.circle(pitchOffsetWidth + 110, pitchCenterY, 2).attr('stroke', '#fff').attr('fill', '#fff'); // left penalty kick spot
-    pitch.circle(pitchOffsetWidth + pitchWidth - 110, pitchCenterY, 2).attr('stroke', '#fff').attr('fill', '#fff'); // right penalty kick spot
+    pitch.circle(pitchOffsetWidth + 110, pitchCenterY, 1).attr('stroke', '#fff'); // left penalty kick spot
+    pitch.circle(pitchOffsetWidth + pitchWidth - 110, pitchCenterY, 1).attr('stroke', '#fff'); // right penalty kick spot
 }
 function drawScore(goalRed, goalBlue)
 {
@@ -120,14 +120,14 @@ function drawTeamDebugMessages(debug)
 function drawPlayers(players, color)
 {
     $(players).each(function(index, player) {
-        var p = pitch.circle(player.position.x, player.position.y, 6).attr('fill', color);
+        var p = pitch.circle(player.position.x, player.position.y, 3).attr('fill', color);
 
         var shape = pitch.path([
-            'M', player.position.x - 3, player.position.y + 8,
-            'L', player.position.x + 3, player.position.y + 10,
-            'L', player.position.x + 3, player.position.y - 10,
-            'L', player.position.x - 3, player.position.y - 8,
-            'L', player.position.x - 3, player.position.y + 8
+            'M', player.position.x - 1.5, player.position.y + 4,
+            'L', player.position.x + 1.5, player.position.y + 5,
+            'L', player.position.x + 1.5, player.position.y - 5,
+            'L', player.position.x - 1.5, player.position.y - 4,
+            'L', player.position.x - 1.5, player.position.y + 4
         ]).attr('fill', color);
         shape.transform('r' + (Raphael.deg(Math.atan2(player.heading.x, -player.heading.y)) - 90));
 
@@ -137,10 +137,6 @@ function drawPlayers(players, color)
         } else {
             p.attr('stroke', color);
             shape.attr('stroke', color);
-        }
-        if (player.isInHotRegion) {
-            p.attr('stroke', '#ff0');
-            shape.attr('stroke', '#ff0');
         }
         var label = [];
         if (player.id) {
