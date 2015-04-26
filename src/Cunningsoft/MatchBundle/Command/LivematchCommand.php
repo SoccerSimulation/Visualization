@@ -55,7 +55,7 @@ class LivematchCommand extends ContainerAwareCommand
         $this->sender = $context->getSocket(\ZMQ::SOCKET_PUSH);
         $this->sender->connect('tcp://localhost:5558');
 
-        $this->pitch = new SoccerPitch(1400, 800);
+        $this->pitch = new SoccerPitch();
 
         $this->loop = Factory::create();
         $this->timer = $this->loop->addPeriodicTimer(1 / Prm::FrameRate, array($this, 'update'));

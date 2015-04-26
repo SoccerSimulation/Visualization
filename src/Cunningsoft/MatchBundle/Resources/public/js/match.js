@@ -1,6 +1,9 @@
-var clientWidth = 1400;
-var clientHeight = 800;
-var playingAreaBorder = 20;
+var pitchWidth = 1050;
+var pitchHeight = 680;
+var pitchOffsetWidth = 60;
+var pitchOffsetHeight = 20;
+var pitchCenterX = pitchWidth / 2 + pitchOffsetWidth;
+var pitchCenterY = pitchHeight / 2 + pitchOffsetHeight;
 var fpsFilterStrength = 20, frameTime = 0, lastLoopDate = new Date(), thisLoopDate;
 function render(data)
 {
@@ -19,11 +22,11 @@ function render(data)
     drawScore(data.goalRed, data.goalBlue);
     drawTeamRed(data.teamRed);
     drawTeamBlue(data.teamBlue);
-    pitch.text(40, 10, (1000/frameTime).toFixed(1) + ' fps').attr('fill', '#fff');
+    $('.js-fps').html((1000 / frameTime).toFixed(1) + ' fps');
 }
 function drawGras()
 {
-    pitch.rect(0, 0, clientWidth, clientHeight).attr('fill', '#090').attr('stroke', '#090');
+    pitch.rect(0, 0, pitchWidth + pitchOffsetWidth * 2, pitchHeight + pitchOffsetHeight * 2).attr('fill', '#090').attr('stroke', '#090');
 }
 function drawRegions(regions)
 {
@@ -40,53 +43,60 @@ function drawBall(ball)
 }
 function drawGoalRed(goalRed)
 {
-    pitch.rect(goalRed.center.x, goalRed.center.y - goalRed.height / 2, goalRed.width, goalRed.height).attr('stroke', '#f00');
+    pitch.rect(goalRed.leftPost.x - 40, goalRed.leftPost.y, 40, goalRed.rightPost.y - goalRed.leftPost.y).attr('stroke', '#fff');
 }
 function drawGoalBlue(goalBlue)
 {
-    pitch.rect(goalBlue.center.x - goalBlue.width, goalBlue.center.y - goalBlue.height / 2, goalBlue.width, goalBlue.height).attr('stroke', '#00f');
+    pitch.rect(goalBlue.leftPost.x, goalBlue.leftPost.y, 40, goalBlue.rightPost.y - goalBlue.leftPost.y).attr('stroke', '#fff');
 }
 function drawPitchMarkings()
 {
-    pitch.circle(clientWidth / 2, clientHeight / 2, (clientWidth - playingAreaBorder) * 0.125).attr('stroke', '#fff');
-    pitch.circle(clientWidth / 2, clientHeight / 2, 2).attr('fill', '#fff').attr('stroke', '#fff');
-    pitch.path('M' + (clientWidth / 2) + ',' + playingAreaBorder + 'L' + (clientWidth / 2) + ',' + (clientHeight - playingAreaBorder)).attr('stroke', '#fff');
-    pitch.path('M' + playingAreaBorder + ',' + playingAreaBorder + 'L' + (clientWidth - playingAreaBorder) + ',' + playingAreaBorder + 'L' + (clientWidth - playingAreaBorder) + ',' + (clientHeight - playingAreaBorder) + 'L' + playingAreaBorder + ',' + (clientHeight - playingAreaBorder) + 'L' + playingAreaBorder + ',' + playingAreaBorder).attr('stroke', '#fff');
+    pitch.circle(pitchCenterX, pitchCenterY, 91.5).attr('stroke', '#fff'); // kick off circle
+    pitch.circle(pitchCenterX, pitchCenterY, 2).attr('fill', '#fff').attr('stroke', '#fff'); // kick off spot
+    pitch.rect(pitchOffsetWidth, pitchOffsetHeight, pitchWidth, pitchHeight).attr('stroke', '#fff'); // pitch limitations
+    pitch.path(['M', pitchCenterX, pitchOffsetHeight, 'L', pitchCenterX, pitchHeight + pitchOffsetHeight]).attr('stroke', '#fff'); // middle line
+    pitch.rect(pitchOffsetWidth, pitchCenterY - 201.6, 165, 403.2).attr('stroke', '#fff'); // left penalty area
+    pitch.rect(pitchWidth + pitchOffsetWidth - 165, pitchCenterY - 201.6, 165, 403.2).attr('stroke', '#fff'); // right penalty area
+    pitch.rect(pitchOffsetWidth, pitchCenterY - 91.6, 55, 183.2).attr('stroke', '#fff'); // left goalkeeper area
+    pitch.rect(pitchWidth + pitchOffsetWidth - 55, pitchCenterY - 91.6, 55, 183.2).attr('stroke', '#fff'); // right goalkeeper area
+    pitch.circle(pitchOffsetWidth + 110, pitchCenterY, 2).attr('stroke', '#fff').attr('fill', '#fff'); // left penalty kick spot
+    pitch.circle(pitchOffsetWidth + pitchWidth - 110, pitchCenterY, 2).attr('stroke', '#fff').attr('fill', '#fff'); // right penalty kick spot
 }
 function drawScore(goalRed, goalBlue)
 {
-    pitch.text(clientWidth / 2 - 30, clientHeight - 10, 'Red: ' + goalBlue.goalsScored).attr('fill', '#f00');
-
-    pitch.text(clientWidth / 2 + 30, clientHeight - 10, 'Blue: ' + goalRed.goalsScored).attr('fill', '#00f');
+    $('.js-score-red').html(goalBlue.goalsScored);
+    $('.js-score-blue').html(goalRed.goalsScored);
 }
 function drawTeamRed(team)
 {
-    drawTeamInControl(team.inControl, 'Red');
-    drawControllingPlayer(team.controllingPlayer);
+    drawTeamInControl(team.inControl, 'red');
+    drawControllingPlayer(team.controllingPlayer, 'red');
     drawSupportSpots(team);
-    drawTeamState(team.state, 160, '#f00');
+    drawTeamState(team.state, 'red');
     drawTeamDebugMessages(team.debug);
     drawPlayers(team.players, '#f00');
 }
 function drawTeamBlue(team)
 {
-    drawTeamInControl(team.inControl, 'Blue');
-    drawControllingPlayer(team.controllingPlayer);
+    drawTeamInControl(team.inControl, 'blue');
+    drawControllingPlayer(team.controllingPlayer, 'blue');
     drawSupportSpots(team);
-    drawTeamState(team.state, 500, '#00f');
+    drawTeamState(team.state, 'blue');
     drawTeamDebugMessages(team.debug);
     drawPlayers(team.players, '#00f');
 }
-function drawTeamInControl(inControl, color)
+function drawTeamInControl(inControl, team)
 {
+    $('.js-in-control-' + team).html('');
     if (inControl) {
-        pitch.text(200, 10, color + ' in Control').attr('fill', '#fff');
+        $('.js-in-control-' + team).html('in control');
     }
 }
-function drawControllingPlayer(player)
+function drawControllingPlayer(player, team)
 {
+    $('.js-controlling-player-' + team).html('');
     if (player) {
-        pitch.text(clientWidth - 150, 10, 'Controlling Player: ' + player.id).attr('fill', '#fff');
+        $('.js-controlling-player-' + team).html(player.id);
     }
 }
 function drawSupportSpots(team)
@@ -97,9 +107,9 @@ function drawSupportSpots(team)
         });
     }
 }
-function drawTeamState(state, x, color)
+function drawTeamState(state, team, color)
 {
-    pitch.text(x, clientHeight - 10, state).attr('fill', color);
+    $('.js-team-state-' + team).html(state);
 }
 function drawTeamDebugMessages(debug)
 {
@@ -112,11 +122,13 @@ function drawPlayers(players, color)
     $(players).each(function(index, player) {
         var p = pitch.circle(player.position.x, player.position.y, 6).attr('fill', color);
 
-        var a = new Vector2D(player.position.x - 3, player.position.y + 8);
-        var b = new Vector2D(player.position.x + 3, player.position.y + 10);
-        var c = new Vector2D(player.position.x + 3, player.position.y - 10);
-        var d = new Vector2D(player.position.x - 3, player.position.y - 8);
-        var shape = pitch.path('M' + a.x + ',' + a.y + 'L' + b.x + ',' + b.y + 'L' + c.x + ',' + c.y + 'L' + d.x + ',' + d.y + 'L' + a.x + ',' + a.y).attr('fill', color);
+        var shape = pitch.path([
+            'M', player.position.x - 3, player.position.y + 8,
+            'L', player.position.x + 3, player.position.y + 10,
+            'L', player.position.x + 3, player.position.y - 10,
+            'L', player.position.x - 3, player.position.y - 8,
+            'L', player.position.x - 3, player.position.y + 8
+        ]).attr('fill', color);
         shape.transform('r' + (Raphael.deg(Math.atan2(player.heading.x, -player.heading.y)) - 90));
 
         if ($('#showIfThreatened').is(':checked') && player.threatened) {
@@ -125,6 +137,10 @@ function drawPlayers(players, color)
         } else {
             p.attr('stroke', color);
             shape.attr('stroke', color);
+        }
+        if (player.isInHotRegion) {
+            p.attr('stroke', '#ff0');
+            shape.attr('stroke', '#ff0');
         }
         var label = [];
         if (player.id) {

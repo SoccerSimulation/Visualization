@@ -2,7 +2,49 @@
 
 {% block content %}
 <div id="pitch"></div>
-<div id="slider" style="width: 1400px"></div>
+<div class="js-fps"></div>
+<table class="info">
+    <thead>
+        <tr>
+            <th>Red</th>
+            <th></th>
+            <th>Blue</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="js-score-red"></td>
+            <td>Score</td>
+            <td class="js-score-blue"></td>
+        </tr>
+        <tr>
+            <td class="js-controlling-player-red"></td>
+            <td>Controlling Player</td>
+            <td class="js-controlling-player-blue"></td>
+        </tr>
+        <tr>
+            <td class="js-team-state-red"></td>
+            <td>State</td>
+            <td class="js-team-state-blue"></td>
+        </tr>
+        <tr>
+            <td class="js-in-control-red"></td>
+            <td></td>
+            <td class="js-in-control-blue"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+    <div id="slider" style="width: 1090px"></div>
 
 <input type="checkbox" id="showPlayerState" />
 <label for="showPlayerState">show player state</label>
