@@ -72,7 +72,16 @@ class LivematchCommand extends ContainerAwareCommand
             $this->timer = $this->loop->addPeriodicTimer($interval, array($this, 'update'));
         }
         $this->pitch->update();
+        $this->handleEvents();
         $render = $this->pitch;
         $this->sender->send(json_encode($render));
+    }
+
+    private function handleEvents()
+    {
+        $events = $this->pitch->releaseEvents();
+        foreach ($events as $event) {
+            $this->getContainer()->get('event_dispatcher')->dispatch($event->getName(), $event);
+        }
     }
 }

@@ -1,3 +1,13 @@
 services:
     soccerstar.match.server:
         class: Cunningsoft\MatchBundle\Services\Server
+
+    soccerstar.listener.log:
+        class: Cunningsoft\MatchBundle\Listener\LogListener
+        arguments: [@logger]
+        tags:
+            - { name: kernel.event_listener, event: soccer_simulation.state.enter, method: onStateEnter }
+            - { name: kernel.event_listener, event: soccer_simulation.message.pass_to_me, method: onMessagePassToMe }
+            - { name: kernel.event_listener, event: soccer_simulation.kick.cannot_kick_ball, method: onCannotKickBall }
+            - { name: kernel.event_listener, event: soccer_simulation.kick.shot, method: onShot }
+            - { name: kernel.event_listener, event: soccer_simulation.kick.pass, method: onPass }
