@@ -1,76 +1,82 @@
 {% extends 'MatchBundle::layout.html.twig' %}
 
 {% block content %}
-<div id="pitch"></div>
-<div class="js-fps"></div>
-<table class="info">
-    <thead>
-        <tr>
-            <th>Red</th>
-            <th></th>
-            <th>Blue</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td class="js-score-red"></td>
-            <td>Score</td>
-            <td class="js-score-blue"></td>
-        </tr>
-        <tr>
-            <td class="js-controlling-player-red"></td>
-            <td>Controlling Player</td>
-            <td class="js-controlling-player-blue"></td>
-        </tr>
-        <tr>
-            <td class="js-team-state-red"></td>
-            <td>State</td>
-            <td class="js-team-state-blue"></td>
-        </tr>
-        <tr>
-            <td class="js-in-control-red"></td>
-            <td></td>
-            <td class="js-in-control-blue"></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    </tbody>
-</table>
-    <div id="slider" style="width: 1090px"></div>
-
-<input type="checkbox" id="showPlayerState" />
-<label for="showPlayerState">show player state</label>
-
-<input type="checkbox" id="showSteeringForce" />
-<label for="showSteeringForce">show steering force</label>
-
-<input type="checkbox" id="showTarget" />
-<label for="showTarget">show target</label>
-
-<input type="checkbox" id="showIfThreatened" />
-<label for="showIfThreatened">show if threatened</label>
-
-<input type="checkbox" id="showRegions" />
-<label for="showRegions">show regions</label>
-
-<input type="checkbox" id="showSupportSpots" />
-<label for="showSupportSpots">show support spots</label>
+<div class="row">
+    <div class="col-md-12">
+        <div id="pitch"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="js-fps"></div>
+        <div id="slider"></div>
+        <table class="table center">
+            <thead>
+                <tr>
+                    <th class="center">Red</th>
+                    <th></th>
+                    <th class="center">Blue</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="js-score-red"></td>
+                    <td>Score</td>
+                    <td class="js-score-blue"></td>
+                </tr>
+                <tr>
+                    <td class="js-controlling-player-red"></td>
+                    <td>Controlling Player</td>
+                    <td class="js-controlling-player-blue"></td>
+                </tr>
+                <tr>
+                    <td class="js-team-state-red"></td>
+                    <td>State</td>
+                    <td class="js-team-state-blue"></td>
+                </tr>
+                <tr>
+                    <td class="js-in-control-red"></td>
+                    <td></td>
+                    <td class="js-in-control-blue"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <div class="input-group">
+            <span class="input-group-addon"><input type="checkbox" id="showPlayerState" checked="checked" /></span>
+            <label class="form-control" for="showPlayerState">show player state</label>
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon"><input type="checkbox" id="showSteeringForce" /></span>
+            <label class="form-control" for="showSteeringForce">show steering force</label>
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon"><input type="checkbox" id="showTarget" /></span>
+            <label class="form-control" for="showTarget">show target</label>
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon"><input type="checkbox" id="showIfThreatened" /></span>
+            <label class="form-control" for="showIfThreatened">show if threatened</label>
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon"><input type="checkbox" id="showRegions" /></span>
+            <label class="form-control" for="showRegions">show regions</label>
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon"><input type="checkbox" id="showSupportSpots" /></span>
+            <label class="form-control" for="showSupportSpots">show support spots</label>
+        </div>
+    </div>
+</div>
 
 <script>
     var response, pitch, conn;
     $(document).ready(function() {
         response = {};
-        pitch = Raphael(document.getElementById('pitch'), 1400, 800);
+        pitch = Raphael(document.getElementById('pitch'), pitchWidth + 2 * pitchOffsetWidth, pitchHeight + 2 * pitchOffsetHeight);
         conn = new ab.Session(
-                'ws://soccersim.playground.cunningsoft.de:8080',
+                'ws://localhost:8080',
                 function () {
                     conn.subscribe('livematch', function (topic, data) {
                         response = data;
