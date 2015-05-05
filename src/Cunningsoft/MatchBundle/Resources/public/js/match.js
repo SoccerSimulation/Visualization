@@ -22,7 +22,8 @@ function render(data)
     drawScore(data.goalRed, data.goalBlue);
     drawTeamRed(data.teamRed);
     drawTeamBlue(data.teamBlue);
-    $('.js-fps').html((1000 / frameTime).toFixed(1) + ' fps');
+    $('.js-fps-update').html((data.serverFps).toFixed(1) + ' fps (update cycle)');
+    $('.js-fps-render').html((1000 / frameTime).toFixed(1) + ' fps (render cycle)');
 }
 function drawGras()
 {

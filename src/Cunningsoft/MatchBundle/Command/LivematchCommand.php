@@ -73,8 +73,7 @@ class LivematchCommand extends ContainerAwareCommand
         }
         $this->pitch->update();
         $this->handleEvents();
-        $render = $this->pitch;
-        $this->sender->send(json_encode($render));
+        $this->sender->send(json_encode($this->pitch));
     }
 
     private function handleEvents()
